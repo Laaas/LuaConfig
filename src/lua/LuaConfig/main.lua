@@ -20,26 +20,33 @@ end
 
 local function loadconfig(jsonpath)
 	local luapath = jsonpath:sub(-4) .. "lua" -- We assume that it ends in .json
-	if not GetFileExists(luapath) then
+
+	if GetFileExists(jsonpath) then
+		if GetFileExists(luapath) then
+			Print([[
+			--------WARNING--------
+			Configuration file %s takes priority over %s!
+			Delete %s to solve this problem.
+			--------  END  --------]], jsonpath, luapath, jsonpath)
+		end
 		return loadconfigjson(jsonpath)
 	end
 
 	local file, err = io.open(luapath)
 	if err ~= nil then
-		Print("Could not load configuration file %s: %s\nNB: Reading JSON file as fallback", luapath, err)
-		return loadconfigjson(jsonpath)
+		Print("Could not load configuration file %s: %s", luapath, err)
+		return nil, err
 	end
 
 	local chunk, err = loadstring(file:read "*a", luapath)
 	if err ~= nil then
-		Print("Could not load configuration file %s: %s\nNB: Reading JSON file as fallback", luapath, err)
-		return loadconfigjson(jsonpath)
+		Print("Could not load configuration file %s: %s", luapath, err)
+		return nil, err
 	end
 
 	local data, err = xpcall(chunk, errorhandler)
 	if err ~= nil then
-		Print "NB: Reading JSON file as fallback"
-		return loadconfigjson(jsonpath)
+		return nil, err
 	end
 
 	return data
@@ -55,9 +62,12 @@ function LoadConfigFile(name, default, check)
 			updated, data = CheckConfig(data, default)
 
 			if updated then
-				local new = name:sub(-4) .. "-corrected.json"
-				Print("Configuration file %s was incorrect! Please rectify it with the changes in %s", name, new)
-				SaveConfigFile(new, data) 
+				Print("Configuration file %s was incorrect and has as such been updated!", name)
+				local luapath = "config://" .. name:sub(-4) .. "lua"
+				if GetFileExists(luapath) then
+					Print("\tPlease update %s to reflect these changes", luapath)
+				end
+				SaveConfigFile(name, data)
 			end
 		end
 		return data

@@ -36,14 +36,13 @@ to not use Lua configuration for anything that has to be written to by NS2 itsel
 It's quite simple, really. You, as a server operator, install the mod onto your server. Then
 you find the configuration file you want to convert, make a file with the same file stem
 (i.e. the full file name without the dot and the extension), but suffix it with .lua.
-Then you fill it with functionally equivalent Lua code and voilà! When NS2 attempts
-to load the configuration file the next time, it will instead load the code inside
+Then you fill it with functionally equivalent Lua code, remove the original JSON file and voilà!
+When NS2 attempts to load the configuration file the next time, it will load the code inside
 the Lua file.
+
+NB: You **must** delete the JSON file. If you do not, the JSON file will be loaded instead.
+It takes priority, so that writes from NS2 will be seen when configuration is read again.
 
 # But I don't know Lua
 [Here you go](https://www.lua.org/manual/5.1/manual.html)
 Some things from [here](https://www.lua.org/manual/5.2/manual.html) also work!
-
-# NB (Doesn't apply to shine plugins)
-Instead of overwriting incorrect configuration files, a new rectified configuration file is created,
-which has the suffix "-corrected.json". Please apply the changes from this to your own configuration file.
