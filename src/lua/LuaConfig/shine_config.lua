@@ -1,1 +1,1 @@
-Shine.LoadJSONFile = _G.__LuaConfig.loadconfig(path)
+Shine.LoadJSONFile = _G.__LuaConfig.loadconfig

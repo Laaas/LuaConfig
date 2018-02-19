@@ -19,7 +19,7 @@ local function errorhandler(e)
 end
 
 local function loadconfig(jsonpath)
-	local luapath = path:sub(-4) .. "lua" -- We assume that it ends in .json
+	local luapath = jsonpath:sub(-4) .. "lua" -- We assume that it ends in .json
 	if not GetFileExists(luapath) then
 		return loadconfigjson(jsonpath)
 	end
