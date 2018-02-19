@@ -1,0 +1,14 @@
+
+[master]
+name            = "[WIP] Lua Configuration"
+tags            = ["Tool", "Must be run on server"]
+autodescription = true
+description     = "README.md"
+preview         = "preview.png"
+
+#[beta]
+#name            = "Lua Configuration - Beta"
+#tags            = ["Tool", "Must be run on server"]
+#autodescription = false
+#description     = "description.beta.md"
+#preview         = "preview.png"
