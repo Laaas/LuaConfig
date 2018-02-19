@@ -43,3 +43,7 @@ the Lua file.
 # But I don't know Lua
 [Here you go](https://www.lua.org/manual/5.1/manual.html)
 Some things from [here](https://www.lua.org/manual/5.2/manual.html) also work!
+
+# NB (Doesn't apply to shine plugins)
+Instead of overwriting incorrect configuration files, a new rectified configuration file is created,
+which has the suffix "-corrected.json". Please apply the changes from this to your own configuration file.
