@@ -79,3 +79,13 @@ function LoadConfigFile(name, default, check)
 		return default
 	end
 end
+
+function WriteDefaultConfigFile(name, default)
+	if not GetFileExists("config://" .. name) and not GetFileExists("config://" .. name:sub(1, -5) .. "lua") then
+		local file = io.open("config://" .. name, "w")
+		if file == nil then
+			return
+		end
+		file:write(json.encode(default, { indent = true }))
+	end
+end
