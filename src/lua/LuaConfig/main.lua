@@ -19,28 +19,31 @@ local function errorhandler(e)
 end
 
 local function loadconfig(jsonpath)
-	local luapath = jsonpath:sub(-4) .. "lua" -- We assume that it ends in .json
+	local luapath = jsonpath:sub(1, -5) .. "lua" -- We assume that it ends in .json
 
 	if GetFileExists(jsonpath) then
 		if GetFileExists(luapath) then
 			Print([[
-			--------WARNING--------
-			Configuration file %s takes priority over %s!
-			Delete %s to solve this problem.
-			--------  END  --------]], jsonpath, luapath, jsonpath)
+
+--------WARNING--------
+Configuration file %s takes priority over %s!
+Delete %s to solve this problem.
+--------  END  --------]], jsonpath, luapath, jsonpath)
 		end
 		return loadconfigjson(jsonpath)
 	end
 
+	if not GetFileExists(luapath) then return end
+
 	local file, err = io.open(luapath)
 	if err ~= nil then
-		Print("Could not load configuration file %s: %s", luapath, err)
+		Print("[ERROR] Could not load configuration file %s: %s", luapath, err)
 		return nil, err
 	end
 
 	local chunk, err = loadstring(file:read "*a", luapath)
 	if err ~= nil then
-		Print("Could not load configuration file %s: %s", luapath, err)
+		Print("[ERROR] Could not load configuration file %s: %s", luapath, err)
 		return nil, err
 	end
 
@@ -63,7 +66,7 @@ function LoadConfigFile(name, default, check)
 
 			if updated then
 				Print("Configuration file %s was incorrect and has as such been updated!", name)
-				local luapath = "config://" .. name:sub(-4) .. "lua"
+				local luapath = "config://" .. name:sub(1, -5) .. "lua"
 				if GetFileExists(luapath) then
 					Print("\tPlease update %s to reflect these changes", luapath)
 				end
