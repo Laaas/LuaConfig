@@ -47,9 +47,9 @@ Delete %s to solve this problem.
 		return nil, err
 	end
 
-	local data, err = xpcall(chunk, errorhandler)
-	if err ~= nil then
-		return nil, err
+	local success, data = xpcall(chunk, errorhandler)
+	if success == false then
+		return nil, data
 	end
 
 	return data
