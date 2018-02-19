@@ -1,5 +1,5 @@
 # Warning
-This mod is extremely WIP.
+This mod is WIP.
 
 # About
 JSON? Yuck. No comments, overly verbose, hard to read **and** modify,
@@ -42,6 +42,37 @@ the Lua file.
 
 NB: You **must** delete the JSON file. If you do not, the JSON file will be loaded instead.
 It takes priority, so that writes from NS2 will be seen when configuration is read again.
+
+## Example
+```
+setfenv(1, {})
+
+maps = {"ns2_bandaidmap"}
+time = 30
+mode = "order"
+mods = {
+	"334982d2",
+	"104ba26d",
+	"706d242",
+	"34e28e40",
+}
+
+return _G
+```
+
+```
+return {
+	maps = {"ns2_bandaidmap"},
+	time = 30,
+	mode = "order",
+	mods = {
+		"334982d2",
+		"104ba26d",
+		"706d242",
+		"34e28e40",
+	},
+}
+```
 
 # But I don't know Lua
 [Here you go](https://www.lua.org/manual/5.1/manual.html)
