@@ -18,20 +18,6 @@ Lua, which is used in NS2 for everything other than the engine itself, actually
 
 So I thought »Why doesn't NS2 just use Lua for configuration«, and so I made this mod.
 
-# Limitations
-## Client-side
-Client-side configuration files will **not** be able to use Lua, since LuaJIT is
-inherently unsafe, unless sandboxed properly. I will add in the ability to use it
-client-side too some time in the future, but it will be very limited.
-
-## Writing to the configuration files from NS2
-Whenever a configuration file is written to, the original Lua configuration file
-will **not** be updated. This is simply not possible without extreme levels of complexity
-(and even then it would probably still not be good enough).
-
-You must manually update the Lua configuration file, but I would personally recommend you
-to not use Lua configuration for anything that has to be written to by NS2 itself.
-
 # How to use
 It's quite simple, really. You, as a server operator, install the mod onto your server. Then
 you find the configuration file you want to convert, make a file with the same file stem
@@ -43,6 +29,27 @@ the Lua file.
 NB: You **must** delete the JSON file. If you do not, the JSON file will be loaded instead.
 It takes priority, so that writes from NS2 will be seen when configuration is read again.
 
+# Limitations
+## Client-side
+Client-side configuration files will **not** be able to use Lua, since LuaJIT is
+inherently unsafe, unless sandboxed properly. I will add in the ability to use it
+client-side too some time in the future, but it will be very limited.
+
+## Writing to the configuration files from NS2
+Whenever a configuration file is written to, the original Lua configuration file
+will **not** be updated. **Instead** a new matching and corrected JSON file is created.
+Updating the Lua file is simply not possible without extreme levels of complexity
+(and even then it would probably still not be good enough).
+
+You must manually update the Lua configuration file so that it is equivalent
+to the new JSON file, but I would personally recommend you
+to not use Lua configuration for anything that has to be written to by NS2 itself.
+
+E.g. if you have a wrongly configure DiscordBridge.lua, shine will make a DiscordBridge.json file
+that is correct. This JSON file will override the original Lua file, i.e. when Shine attempts to load
+the DiscordBridge configuration, it will load DiscordBridge.json and not DiscordBridge.lua.
+So one must delete the JSON version to load the Lua version instead.
+
 ## Example
 ```
 setfenv(1, {})
@@ -51,25 +58,25 @@ maps = {"ns2_bandaidmap"}
 time = 30
 mode = "order"
 mods = {
-	"334982d2",
-	"104ba26d",
-	"706d242",
-	"34e28e40",
+	"334982D2",
+	"104BA26D",
+	"706D242",
+	"34E28E40",
 }
 
 return _G
 ```
-
+OR (they are equivalent)
 ```
 return {
 	maps = {"ns2_bandaidmap"},
 	time = 30,
 	mode = "order",
 	mods = {
-		"334982d2",
-		"104ba26d",
-		"706d242",
-		"34e28e40",
+		"334982D2",
+		"104BA26D",
+		"706D242",
+		"34E28E40",
 	},
 }
 ```
