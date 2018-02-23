@@ -1,6 +1,6 @@
 
 [master]
-name            = "[WIP] Lua Configuration"
+name            = "Lua Configuration"
 tags            = ["Tool", "Must be run on server"]
 autodescription = true
 description     = "README.md"
