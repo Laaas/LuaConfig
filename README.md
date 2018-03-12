@@ -1,6 +1,3 @@
-# Warning
-This mod is WIP.
-
 # About
 JSON? Yuck. No comments, overly verbose, hard to read **and** modify,
 what's there to like about it?
@@ -22,12 +19,12 @@ So I thought »Why doesn't NS2 just use Lua for configuration«, and so I made t
 It's quite simple, really. You, as a server operator, install the mod onto your server. Then
 you find the configuration file you want to convert, make a file with the same file stem
 (i.e. the full file name without the dot and the extension), but suffix it with .lua.
-Then you fill it with functionally equivalent Lua code, remove the original JSON file and voilà!
+Then you fill it with functionally equivalent Lua code and voilà!
 When NS2 attempts to load the configuration file the next time, it will load the code inside
 the Lua file.
 
-NB: You **must** delete the JSON file. If you do not, the JSON file will be loaded instead.
-It takes priority, so that writes from NS2 will be seen when configuration is read again.
+# What if I fuck up?
+If your Lua file is somehow erroneous, then the corresponding JSON file will be loaded in stead.
 
 # Limitations
 ## Client-side
@@ -37,20 +34,18 @@ client-side too some time in the future, but it will be very limited.
 
 ## Writing to the configuration files from NS2
 Whenever a configuration file is written to, the original Lua configuration file
-will **not** be updated. **Instead** a new matching and corrected JSON file is created.
+will **not** be updated. **Instead** the JSON file is corrected.
 Updating the Lua file is simply not possible without extreme levels of complexity
 (and even then it would probably still not be good enough).
 
 You must manually update the Lua configuration file so that it is equivalent
-to the new JSON file, but I would personally recommend you
+to the JSON file, but I would personally recommend you
 to not use Lua configuration for anything that has to be written to by NS2 itself.
 
-E.g. if you have a wrongly configure DiscordBridge.lua, shine will make a DiscordBridge.json file
-that is correct. This JSON file will override the original Lua file, i.e. when Shine attempts to load
-the DiscordBridge configuration, it will load DiscordBridge.json and not DiscordBridge.lua.
-So one must delete the JSON version to load the Lua version instead.
+E.g. if you have a wrongly configured DiscordBridge.lua, Shine will attempt to update it and fix it.
+Since the Lua file can't be updated, the JSON file will be updated.
 
-## Example
+# Example
 ```
 setfenv(1, {})
 
