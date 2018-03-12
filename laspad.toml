@@ -5,6 +5,7 @@ tags            = ["Tool", "Must be run on server"]
 autodescription = true
 description     = "README.md"
 preview         = "preview.png"
+website         = "https://github.com/Laaas/LuaConfig"
 
 #[beta]
 #name            = "Lua Configuration - Beta"
