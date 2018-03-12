@@ -5,12 +5,15 @@ ModLoader.SetupFileHook("lua/shine/core/shared/config.lua", "lua/LuaConfig/shine
 local byte = string.byte
 
 local function loadconfigjson(path)
+	local data, _
 	local file, err = io.open(path)
-	if err == nil then
-		return json.decode(file:read "*a")
-	else
-		return file, err
+	if not err then
+		data, _, err = json.decode(file:read "*a")
 	end
+	if err then
+		Shared.Message("Error while opening " .. path .. ": " .. err)
+	end
+	return data, err
 end
 
 local function errorhandler(e)
@@ -18,47 +21,38 @@ local function errorhandler(e)
 	return e
 end
 
-local function loadconfig(jsonpath)
-	local luapath = jsonpath:sub(1, -5) .. "lua" -- We assume that it ends in .json
+local function loadconfiglua(jsonpath)
+	local luapath = jsonpath:sub(1, -5) .. "lua" -- We assume that jsonpath ends in .json
 
-	if GetFileExists(jsonpath) then
-		if GetFileExists(luapath) then
-			Print([[
-
---------WARNING--------
-Configuration file %s takes priority over %s!
-Delete %s to solve this problem.
---------  END  --------]], jsonpath, luapath, jsonpath)
-		end
-		return loadconfigjson(jsonpath)
+	if not GetFileExists(luapath) then
+		return false
 	end
-
-	if not GetFileExists(luapath) then return end
 
 	local file, err = io.open(luapath)
 	if err ~= nil then
 		Print("[ERROR] Could not load configuration file %s: %s", luapath, err)
-		return nil, err
+		return false, err
 	end
 
 	local chunk, err = loadstring(file:read "*a", luapath)
 	if err ~= nil then
 		Print("[ERROR] Could not load configuration file %s: %s", luapath, err)
-		return nil, err
+		return false, err
 	end
 
 	local success, data = xpcall(chunk, errorhandler)
 	if success == false then
-		return nil, data
+		return false, data
 	end
 
 	return data
 end
 
-_G.__LuaConfig = {loadconfig = loadconfig}
-
-function LoadConfigFile(name, default, check)
-	local data = loadconfig("config://" .. name)
+function LoadConfigFileAbsolute(name, default, check)
+	local data, err = loadconfiglua(name)
+	if not data then
+		data, err = loadconfigjson(name)
+	end
 	if data ~= nil then
 		if default and check then
 			local updated
@@ -73,19 +67,13 @@ function LoadConfigFile(name, default, check)
 				SaveConfigFile(name, data)
 			end
 		end
-		return data
-	else
+	elseif default then
 		WriteDefaultConfigFile(name, default)
-		return default
+		data = default
 	end
+	return data, err
 end
 
-function WriteDefaultConfigFile(name, default)
-	if not GetFileExists("config://" .. name) and not GetFileExists("config://" .. name:sub(1, -5) .. "lua") then
-		local file = io.open("config://" .. name, "w")
-		if file == nil then
-			return
-		end
-		file:write(json.encode(default, { indent = true }))
-	end
+function LoadConfigFile(name, ...)
+	return LoadConfigFileAbsolute("config://" .. name, ...)
 end

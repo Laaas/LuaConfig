@@ -1,1 +1,1 @@
-Shine.LoadJSONFile = _G.__LuaConfig.loadconfig
+Shine.LoadJSONFile = LoadConfigFileAbsolute
