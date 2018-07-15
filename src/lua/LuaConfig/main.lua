@@ -13,6 +13,7 @@ local function loadconfigjson(path)
 	if err then
 		Shared.Message("Error while opening " .. path .. ": " .. err)
 	end
+	if file then file:close() end
 	return data, err
 end
 
@@ -31,10 +32,12 @@ local function loadconfiglua(jsonpath)
 	local file, err = io.open(luapath)
 	if err ~= nil then
 		Print("[ERROR] Could not load configuration file %s: %s", luapath, err)
+		if file then file:close() end
 		return false, err
 	end
 
 	local chunk, err = loadstring(file:read "*a", luapath)
+	file:close()
 	if err ~= nil then
 		Print("[ERROR] Could not load configuration file %s: %s", luapath, err)
 		return false, err
