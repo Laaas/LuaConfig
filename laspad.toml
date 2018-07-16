@@ -7,9 +7,9 @@ description     = "README.md"
 preview         = "preview.png"
 website         = "https://github.com/Laaas/LuaConfig"
 
-#[beta]
-#name            = "Lua Configuration - Beta"
-#tags            = ["Tool", "Must be run on server"]
-#autodescription = false
-#description     = "description.beta.md"
-#preview         = "preview.png"
+[beta]
+name            = "Lua Configuration - Beta"
+tags            = ["Tool", "Must be run on server"]
+autodescription = false
+description     = "description.beta.txt"
+preview         = "preview.png"
